@@ -4,23 +4,29 @@ const { solidity } = require("ethereum-waffle");
 
 use(solidity);
 
-describe("My Dapp", function () {
+
+// XDAI STUFF
+const router = "0x1C232F01118CB8B424793ae03F870aa7D0ac7f77"
+const farm = "0xB44825cF0d8D4dD552f2434056c41582415AaAa1"
+const comb = "0x38Fb649Ad3d6BA1113Be5F57B927053E97fC5bF7"
+const pair = "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d"
+
+describe("Test Suite", function () {
   let myContract;
 
-  describe("YourContract", function () {
-    it("Should deploy YourContract", async function () {
-      const YourContract = await ethers.getContractFactory("YourContract");
+  describe("Your Contract", function ()  {
+    it("should deploy the contract", async function () {
+      const [owner] = await ethers.getSigners();
+      const yourContractFactory = await ethers.getContractFactory("YourContract");
+      const yourContract = await yourContractFactory.deploy(
+        farm,
+        router,
+        comb,
+        pair
+      );
+      await yourContract.deployed()
 
-      myContract = await YourContract.deploy();
-    });
-
-    describe("setPurpose()", function () {
-      it("Should be able to set a new purpose", async function () {
-        const newPurpose = "Test Purpose";
-
-        await myContract.setPurpose(newPurpose);
-        expect(await myContract.purpose()).to.equal(newPurpose);
-      });
-    });
-  });
+      expect(await yourContract.HoneyFarm()).to.equal(farm);
+    })
+  })
 });

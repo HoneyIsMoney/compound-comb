@@ -13,9 +13,12 @@ const pair = "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d"
 
 describe("Test Suite", function () {
   let myContract;
+  let UniRouter;
+  let CombToken;
+  let PairToken;
+  let LPToken;
 
-  describe("Your Contract", function ()  {
-    it("should deploy the contract", async function () {
+    beforeEach(async function () {
       const [owner] = await ethers.getSigners();
       const yourContractFactory = await ethers.getContractFactory("YourContract");
       const yourContract = await yourContractFactory.deploy(
@@ -26,7 +29,26 @@ describe("Test Suite", function () {
       );
       await yourContract.deployed()
 
-      expect(await yourContract.HoneyFarm()).to.equal(farm);
+      UniRouter = await ethers.getContractAt("IUniswapV2Router02.sol", UniRouter, owner);
+
+    })
+
+  describe("Deployment", async function () {
+    it("should deploy contract correctly", async function() {
+      expect(await myContract.HoneyFarm()).to.equal(farm);
+    })
+  })
+
+  describe("Mutations", async function () {
+
+    it("should swapHalfComb()", async function() {
+
+      // get some comb
+      const path = [];
+      path[0] = await UniRouter.WETH();
+      path[1] = "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d" // wxDAI
+      path[2] = comb;
+      await UniRouter.swapExactETHForTokens(0, path, myContract.address, )
     })
   })
 });
